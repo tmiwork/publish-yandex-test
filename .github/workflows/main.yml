@@ -10,7 +10,7 @@ jobs:
         with:
           dotnet-version: '6.0.x'
       - name: Install dependencies
-        run: echo "Restore, ${{ env.MY_VARIABLE }}"
+        run: echo "Restore, ${{ env.path }}"
         run: dotnet restore '${{ env.path }}'
       - name: Build
         run: dotnet build '${{ env.path }}' --no-restore
