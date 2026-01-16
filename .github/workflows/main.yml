@@ -1,26 +1,28 @@
 
 jobs:
   build:
-    name: Build app
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '3.1.x', '6.0.x' ]
     steps:
       - uses: actions/checkout@v5
-      
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
-
-        # DEPS
+          dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet restore '${{ env.path }}'
-
-        # BUILD
-      - name: Build
-        run: dotnet build '${{ env.path }}' --no-restore
-        
-      env:
-        path: "./App/App/App.csproj"
+        run: dotnet restore
+      - name: Test with dotnet
+        run: dotnet test --no-restore --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-results-${{ matrix.dotnet-version }}
+          path: TestResults-${{ matrix.dotnet-version }}
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
+      
 on: 
   push:
     branches:
