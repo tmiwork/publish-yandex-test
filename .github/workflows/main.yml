@@ -1,4 +1,6 @@
-
+env:
+  path: "./App/App/App.csproj"
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,9 +26,6 @@ jobs:
           path: TestResults-${{ matrix.dotnet-version }}
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
-      env:
-        path: "./App/App/App.csproj"
-      
 on: 
   push:
     branches:
