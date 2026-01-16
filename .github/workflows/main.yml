@@ -1,22 +1,20 @@
+
 jobs:
   build:
     name: Build app
     runs-on: ubuntu-latest
     steps:
-      - uses: EasyDesk/action-dotnet-build@v1
+      - uses: actions/checkout@v5
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
         with:
-          # (Optional) Additional arguments for dotnet build.
-          build-args: -v normal
-
-          # (Optional) Build configuration, defaults to 'Release'.
-          # If the version starts with the 'v' prefix, it will be removed to conform to the requirements of dotnet pack.
-          build-configuration: Release
-
-          # (Optional) The path of the project to build; if omitted, the whole solution is built.
-          path: ./App/App/App.csproj
-          
-          # (Optional) True if warnings should be treated as errors, defaults to false.
-          warnings-as-errors: true
+          dotnet-version: '6.0.x'
+      - name: Install dependencies
+        run: dotnet restore '${{ env.path }}'
+      - name: Build
+        run: dotnet build '${{ env.path }}' --no-restore
+        env:
+          path: './App/App/App.csproj
 on: 
   push:
     branches:
