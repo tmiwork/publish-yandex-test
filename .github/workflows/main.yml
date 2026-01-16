@@ -10,11 +10,12 @@ jobs:
         with:
           dotnet-version: '6.0.x'
       - name: Install dependencies
+        run: echo "Restore, ${{ env.MY_VARIABLE }}"
         run: dotnet restore '${{ env.path }}'
       - name: Build
         run: dotnet build '${{ env.path }}' --no-restore
         env:
-          path: './App/App/App.csproj
+          path: "./App/App/App.csproj"
 on: 
   push:
     branches:
